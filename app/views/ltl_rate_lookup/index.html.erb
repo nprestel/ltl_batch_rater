@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Delphi - Simple LTL Rater</title>
+
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Delphi</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="batch">Batch Rater</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="ltl_discounts">Discounts</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+
+    <!-- Contact Section -->
+    <header id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text">
+                        <span class="name">LTL Rater</span>
+                        <hr class="star-light">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+<%= form_tag root_url, method: :get, :class => "form-group", id: "ltl-form" do %>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+  <%= label_tag(:origin_zip, "Origin Zip") %>
+  <%= text_field_tag :origin_zip, params[:origin_zip], class: "form-control", placeholder: "Origin Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
+    <% if @zip_code1 %>  
+        <% if (@zip_code1.city != nil && @zip_code1.city != 0) %>
+        <%= @zip_code1.city %>,  <%= @zip_code1.state %>
+        <% else %>
+        <%= @zip_code1.state %>
+        <% end %>
+    <% end %>
+                            </div>
+                        </div>
+                                                <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+  <%= label_tag(:dest_zip, "Destination Zip") %>
+  <%= text_field_tag :dest_zip, params[:dest_zip], class: "form-control", placeholder: "Destination Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
+    <% if @zip_code2 %>  
+        <% if (@zip_code2.city != nil && @zip_code2.city != 0) %>
+        <%= @zip_code2.city %>,  <%= @zip_code2.state %>
+        <% else %>
+        <%= @zip_code2.state %>
+        <% end %>
+    <% end %>
+                            </div>
+                        </div>
+              
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+  <%= label_tag(:weight, "Weight") %>
+  <%= number_field_tag :weight, params[:weight], class: "form-control", placeholder: "Weight in lbs", required: true, min: 1, max: 15000%>
+                            </div>
+                        </div>
+
+                        <% unless @ltl_rate %>
+
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls floating-label-form-group-with-value">
+  <%= label_tag(:fak, "Freight Class") %>
+  <%= text_field_tag :fak, params[:fak], class: "form-control", placeholder: "Freight Class 70", readonly: "readonly", tabindex: -1  %>
+  <%= label_tag(:fak, "* fixed value per contract *") %>
+                            </div>
+                        </div>
+                        <% end %>
+
+
+                        <br>
+                        <div id="success"></div>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-primary btn-lg">Lookup</button>
+                                <a class="btn btn-primary btn-lg" href="/">Reset</a>
+                            </div>
+                        </div>
+<% end %>
+                </div>
+            </div>
+
+    <% if @ltl_rate %>
+    <div class="intro-text">
+    <dl id ="ltl_info">
+    <% if (@ltl_rate.rate_block_number) != "0" %>
+
+        <% if (@ltl_discount) %>
+            <% if @ltl_rate.charge.to_f * (1 - (@ltl_discount.discount.to_f)) >  @ltl_discount.min %>
+                <span class="name2"><dt>Discounted Rate</dt></span>
+                <span class="name2"><dd><%= number_to_currency(@ltl_rate.charge.to_f * (1 - (@ltl_discount.to_f)))%></dd></span>
+                <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.discount * 100, precision: 2) %></dd></span>
+                <span class="name3"><dd>FULL COST: TBD</dd></span>
+            <% else %>
+                <span class="name2"><dt>Minimum Rate</dt></span>
+                <span class="name2"><dd><%= number_to_currency(@ltl_discount.min.to_f)%></dd></span>
+                <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.discount * 100, precision: 2) %></dd></span>
+                <span class="name3"><dd>FULL COST: TBD</dd></span>
+            <% end %>    
+        <% else %>
+            <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
+            <span class="name2"><dd>FULL COST: TBD</dd></span>
+        <% end %>
+    <% else %>
+            <span class="name2"><dd>RATEWARE ERROR!</dd></span>
+            <% if (@ltl_rate.rate_block_number) == "11" %>
+                <span class="name3"><dd>Origin postal code not in tariff</dd></span>
+                <span class="name3"><dd>Please ensure the origin postal code is correct</dd></span>
+            <% elsif (@ltl_rate.rate_block_number) == "13" %>
+                <span class="name3"><dd>Destination postal code not in tariff</dd></span>
+                <span class="name3"><dd>Please ensure the destination postal code is correct</dd></span>
+            <% else %>
+                <span class="name3"><dd>No error message available</dd></span>
+                <span class="name3"><dd>Try Again</dd></span>
+            <% end %>
+    <% end %>
+    
+  </dl>
+  </div>
+<% end %>
+
+
+
+        </div>
+    </header>
+
+
+    <!-- Footer -->
+    <footer class="text-center">
+
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; NAP <%= Time.now.year %> | <%= link_to 'About', page_path('about') %> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll visible-xs visible-sm">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="js/classie.js"></script>
+    <script src="js/cbpAnimatedHeader.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/freelancer.js"></script>
+
+    <script>
+    $("#ltl-form input").not("[type=submit]").jqBootstrapValidation();
+    </script>
+
+</body>
+
+</html>
+

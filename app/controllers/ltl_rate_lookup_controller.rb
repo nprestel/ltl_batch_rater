@@ -1,0 +1,2 @@
+class LtlRateLookupController < ApplicationController
+end

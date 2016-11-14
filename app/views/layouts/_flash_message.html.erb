@@ -1,0 +1,7 @@
+
+  <% flash.each do |name, msg| %>
+    <div class="alert <%= flash_class(name).to_s %> fade in" style="text-align:center">
+      <a href="#" data-dismiss="alert" class="close" >×</a>
+      <%= msg %>
+    </div>
+  <% end %>
