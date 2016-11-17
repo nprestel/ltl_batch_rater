@@ -85,7 +85,7 @@
         <% if (@zip_code1.city != nil && @zip_code1.city != 0) %>
         <%= @zip_code1.city %>,  <%= @zip_code1.state %>
         <% else %>
-        <%= @zip_code1.state %>
+        <span class="name3"><dd>Not a valid Origin postal code</dd></span>
         <% end %>
     <% end %>
                             </div>
@@ -98,7 +98,7 @@
         <% if (@zip_code2.city != nil && @zip_code2.city != 0) %>
         <%= @zip_code2.city %>,  <%= @zip_code2.state %>
         <% else %>
-        <%= @zip_code2.state %>
+        <span class="name3"><dd>Not a valid Destination postal code</dd></span>
         <% end %>
     <% end %>
                             </div>
