@@ -13,14 +13,14 @@ class ZipCode < ApplicationRecord
 
   def initialize(zip)
     
-    client = Savon.client(wsdl: 'http://www.webservicex.net/uszip.asmx?WSDL')
+    client = Savon.client(wsdl: 'http://ws.cdyne.com/psaddress/addresslookup.asmx?wsdl')
 
-    response = client.call(:get_info_by_zip, message: {"USZip"=> zip })
+    response = client.call(:return_city_state, message: {"zipcode"=> zip, "LicenseKey" => "?" })
     if response.success?
-      data = response.to_array(:get_info_by_zip_response, :get_info_by_zip_result, :new_data_set, :table).first
+      data = response.to_array(:return_city_state_response, :return_city_state_result).first
       if data
         if (data[:city] != nil && data[:city] != 0) 
-          @state = data[:state]
+          @state = data[:state_abbrev]
           @city = data[:city]
         else
           @state = data[:error_message]

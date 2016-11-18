@@ -10,6 +10,7 @@
 #  min          :decimal(5, 2)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  group        :string
 #
 
 require 'csv'
