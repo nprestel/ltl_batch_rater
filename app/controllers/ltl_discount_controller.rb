@@ -8,4 +8,5 @@ class LtlDiscountController < ApplicationController
 	      format.csv { send_data @ltl_discounts.to_csv }
 	    end
   	end
+  	
 end
