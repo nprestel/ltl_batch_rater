@@ -66,7 +66,9 @@ end
 
 gem 'rails_12factor', group: :production
 
-gem 'jquery-datatables-rails', '~> 3.3.0'
+gem 'rails_serve_static_assets', group: [:production]
+
+gem 'jquery-datatables-rails', '~> 3.4.0'
 
 gem 'high_voltage', '~> 3.0.0'
 
