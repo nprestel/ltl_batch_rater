@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
 
     <meta charset="utf-8">
@@ -11,16 +12,7 @@
 
     <title>Delphi - Simple LTL Rater</title>
 
-    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link href="css/freelancer.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -86,7 +78,7 @@
 
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
-<table id="ltl_discounts" class="table table-condensed table-responsive">
+<table id="ltl_discounts" class="table table-condensed table-responsive table-striped">
   <thead>
     <tr>
       <th style="text-align:center">SCAC</th>
@@ -99,11 +91,11 @@
   <tbody>
     <% @ltl_discounts.each do |ltl_discount| %>
       <tr>
-        <td><%= ltl_discount.carrier_scac %></td>
-        <td><%= ltl_discount.origin_state %></td>
-        <td><%= ltl_discount.dest_state %></td>
-        <td><%= number_to_percentage(ltl_discount.discount * 100, precision: 2) %></td>
-        <td><%= number_to_currency(ltl_discount.min) %></td>
+        <td style="color:#4d4d4d"><%= ltl_discount.carrier_scac %></td>
+        <td style="color:#4d4d4d"><%= ltl_discount.origin_state %></td>
+        <td style="color:#4d4d4d"><%= ltl_discount.dest_state %></td>
+        <td style="color:#4d4d4d"><%= number_to_percentage(ltl_discount.discount * 100, precision: 2) %></td>
+        <td style="color:#4d4d4d"><%= number_to_currency(ltl_discount.min) %></td>
       </tr>
     <% end %>
   </tbody>
@@ -139,27 +131,7 @@
 
 
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="js/classie.js"></script>
-    <script src="js/cbpAnimatedHeader.js"></script>
-
-    <!-- Contact Form JavaScript -->
-    <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
-
-    <script>
-    $("#ltl-form input").not("[type=submit]").jqBootstrapValidation();
-    </script>
 
 </body>
 
