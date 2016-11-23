@@ -1,0 +1,32 @@
+# == Schema Information
+#
+# Table name: rates
+#
+#  id           :integer          not null, primary key
+#  carrier_scac :string
+#  nmfc_class   :float
+#  orig_3zip    :string
+#  dest_3zip    :string
+#  weight_break :string
+#  cwt          :float
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  carrier_scac: MyString
+  nmfc_class: 1.5
+  orig_3zip: MyString
+  dest_3zip: MyString
+  weight_break: MyString
+  cwt: 1.5
+
+two:
+  carrier_scac: MyString
+  nmfc_class: 1.5
+  orig_3zip: MyString
+  dest_3zip: MyString
+  weight_break: MyString
+  cwt: 1.5

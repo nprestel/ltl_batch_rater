@@ -135,10 +135,10 @@
                 </div>
             </div>
 
-    <% if @ltl_rate %>
+       <% if @ltl_rate %>
     <div class="intro-text">
     <dl id ="ltl_info">
-    <% if (@ltl_rate.rate_block_number) != "0" %>
+    <% if (@ltl_rate.error_code) == "0" %>
 
         <% if (@ltl_discount) %>
             <% if @ltl_rate.charge.to_f * (1 - (@ltl_discount.discount.to_f)) >  @ltl_discount.min %>
@@ -158,10 +158,10 @@
         <% end %>
     <% else %>
             <span class="name2"><dd>RATEWARE ERROR!</dd></span>
-            <% if (@ltl_rate.rate_block_number) == "11" %>
+            <% if (@ltl_rate.error_code) == "11" %>
                 <span class="name3"><dd>Origin postal code not in tariff</dd></span>
                 <span class="name3"><dd>Please ensure the origin postal code is correct</dd></span>
-            <% elsif (@ltl_rate.rate_block_number) == "13" %>
+            <% elsif (@ltl_rate.error_code) == "13" %>
                 <span class="name3"><dd>Destination postal code not in tariff</dd></span>
                 <span class="name3"><dd>Please ensure the destination postal code is correct</dd></span>
             <% else %>
@@ -173,8 +173,6 @@
   </dl>
   </div>
 <% end %>
-
-
 
         </div>
     </header>
