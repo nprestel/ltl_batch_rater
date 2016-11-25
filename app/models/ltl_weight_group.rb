@@ -1,0 +1,2 @@
+class LtlWeightGroup < ApplicationRecord
+end

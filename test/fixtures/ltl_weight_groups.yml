@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  min_weight: 1
+  max: 
+  rate_block_number: 1
+  weight_group_name: MyText
+
+two:
+  min_weight: 1
+  max: 
+  rate_block_number: 1
+  weight_group_name: MyText
