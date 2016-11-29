@@ -39,8 +39,6 @@ gem "therubyracer"
 
 gem "less-rails"
 
-gem 'client_side_validations'
-
 gem "activerecord-import", ">= 0.4.0"
 
 # Use Redis adapter to run Action Cable in production

@@ -81,11 +81,11 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:origin_zip, "Origin Zip") %>
   <%= text_field_tag :origin_zip, params[:origin_zip], class: "form-control", placeholder: "Origin Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
-    <% if @zip_code1 %>  
-        <% if (@zip_code1.city != nil && @zip_code1.city != 0) %>
+    <% if defined?(@zip_code1) %>  
+        <% if (@zip_code1.present?) %>
         <%= @zip_code1.city %>,  <%= @zip_code1.state %>
         <% else %>
-        <span class="name3"><dd>Not a valid Origin postal code</dd></span>
+        <span class="name3"><dd>Not a valid postal code</dd></span>
         <% end %>
     <% end %>
                             </div>
@@ -94,11 +94,11 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:dest_zip, "Destination Zip") %>
   <%= text_field_tag :dest_zip, params[:dest_zip], class: "form-control", placeholder: "Destination Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
-    <% if @zip_code2 %>  
-        <% if (@zip_code2.city != nil && @zip_code2.city != 0) %>
+    <% if defined?(@zip_code2) %>  
+        <% if (@zip_code2.present?) %>
         <%= @zip_code2.city %>,  <%= @zip_code2.state %>
         <% else %>
-        <span class="name3"><dd>Not a valid Destination postal code</dd></span>
+        <span class="name3"><dd>Not a valid postal code</dd></span>
         <% end %>
     <% end %>
                             </div>
@@ -200,7 +200,11 @@
     </div>
 
 
-
+ <!-- JS FILES -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> 
+ <script src="./js/bootstrap.min.js"></script>
+ <script src="./js/jqBootstrapValidation.js"></script>
+ <script src="./js/contact_me.js"></script>
 
 
 </body>
