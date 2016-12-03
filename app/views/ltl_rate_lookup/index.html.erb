@@ -138,10 +138,10 @@
        <% if @ltl_rate %>
     <div class="intro-text">
     <dl id ="ltl_info">
-    <% if (@ltl_rate.error_code) == "0" %>
+    <% if (@ltl_rate) != "NO MATCH" %>
 
         <% if (@ltl_discount) %>
-            <% if @ltl_rate.charge.to_f * (1 - (@ltl_discount.discount.to_f)) >  @ltl_discount.min %>
+            <% if @ltl_rate * (1 - (@ltl_discount.discount.to_f)) >  @ltl_discount.min %>
                 <span class="name2"><dt>Discounted Rate</dt></span>
                 <span class="name2"><dd><%= number_to_currency(@ltl_rate.charge.to_f * (1 - (@ltl_discount.to_f)))%></dd></span>
                 <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.discount * 100, precision: 2) %></dd></span>
@@ -157,17 +157,8 @@
             <span class="name2"><dd>FULL COST: TBD</dd></span>
         <% end %>
     <% else %>
-            <span class="name2"><dd>RATEWARE ERROR!</dd></span>
-            <% if (@ltl_rate.error_code) == "11" %>
-                <span class="name3"><dd>Origin postal code not in tariff</dd></span>
-                <span class="name3"><dd>Please ensure the origin postal code is correct</dd></span>
-            <% elsif (@ltl_rate.error_code) == "13" %>
-                <span class="name3"><dd>Destination postal code not in tariff</dd></span>
-                <span class="name3"><dd>Please ensure the destination postal code is correct</dd></span>
-            <% else %>
-                <span class="name3"><dd>No error message available</dd></span>
-                <span class="name3"><dd>Try Again</dd></span>
-            <% end %>
+            <span class="name2"><dd>NO RATE!</dd></span>
+            <span class="name2"><dd>LANE NOT IN TARIFF</dd></span>
     <% end %>
     
   </dl>

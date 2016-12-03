@@ -12,4 +12,15 @@
 #
 
 class LtlWeightGroup < ApplicationRecord
+	def self.get_weight_group(wt)
+		 self.where('min_weight <= ? AND max_weight >= ?', wt, wt).first.weight_group_name
+	end
+
+	def self.get_weight_group_bump(wt)
+		if (self.where('min_weight <= ? AND max_weight >= ?', wt, wt).first.rate_block_number + 1) > 9
+			self.where('min_weight <= ? AND max_weight >= ?', wt, wt).first.weight_group_name
+		else
+		 self.where('rate_block_number = ?', self.where('min_weight <= ? AND max_weight >= ?', wt, wt).first.rate_block_number + 1).first.weight_group_name
+		end
+	end
 end
