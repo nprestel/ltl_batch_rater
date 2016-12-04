@@ -6,7 +6,7 @@
 #  carrier_scac :string
 #  origin_state :string
 #  dest_state   :string
-#  discount     :decimal(5, 2)
+#  discount     :decimal(4, 3)
 #  min          :decimal(5, 2)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null

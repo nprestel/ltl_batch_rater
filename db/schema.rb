@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129003605) do
+ActiveRecord::Schema.define(version: 20161204210459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20161129003605) do
     t.string   "carrier_scac"
     t.string   "origin_state"
     t.string   "dest_state"
-    t.decimal  "discount",     precision: 5, scale: 2
+    t.decimal  "discount",     precision: 4, scale: 3
     t.decimal  "min",          precision: 5, scale: 2
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
@@ -42,8 +42,9 @@ ActiveRecord::Schema.define(version: 20161129003605) do
     t.string   "dest_3zip"
     t.string   "weight_group_name"
     t.float    "cwt"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",        default: -> { "now()" }, null: false
+    t.datetime "updated_at",        default: -> { "now()" }, null: false
+    t.index ["orig_3zip", "dest_3zip", "weight_group_name"], name: "rates_od_wtgroup_idx", using: :btree
   end
 
   create_table "transits", force: :cascade do |t|
