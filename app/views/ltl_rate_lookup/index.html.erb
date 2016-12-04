@@ -80,9 +80,9 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:origin_zip, "Origin Zip") %>
-  <%= text_field_tag :origin_zip, params[:origin_zip], class: "form-control", placeholder: "Origin Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
+  <%= text_field_tag :origin_zip, params[:origin_zip], class: "form-control", placeholder: "Origin Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%> 
     <% if defined?(@zip_code1) %>  
-        <% if (@zip_code1.present?) %>
+        <% if (@zip_code1 != "NO MATCH" ) %>
         <%= @zip_code1.city %>,  <%= @zip_code1.state %>
         <% else %>
         <span class="name3"><dd>Not a valid postal code</dd></span>
@@ -95,7 +95,7 @@
   <%= label_tag(:dest_zip, "Destination Zip") %>
   <%= text_field_tag :dest_zip, params[:dest_zip], class: "form-control", placeholder: "Destination Zip", required: true, "data-validation-regex-regex" => "^\\d{5}$", "data-validation-regex-message" => "Must be a 5 digit US zip"%>
     <% if defined?(@zip_code2) %>  
-        <% if (@zip_code2.present?) %>
+        <% if (@zip_code2 != "NO MATCH" ) %>
         <%= @zip_code2.city %>,  <%= @zip_code2.state %>
         <% else %>
         <span class="name3"><dd>Not a valid postal code</dd></span>
@@ -135,29 +135,17 @@
                 </div>
             </div>
 
-       <% if @ltl_rate %>
-    <div class="intro-text">
-    <dl id ="ltl_info">
-    <% if (@ltl_rate) != "NO MATCH" %>
+    <% if @ltl_rate %> <!-- IF ltl_rate exists -->
+        <div class="intro-text">
+        <dl id ="ltl_info">
+    <% if (@zip_code2.blank? || @zip_code1.blank?) %>   <!-- AND IF zip_code1 OR zip_code2 is blank -->
+        <span class="name2"><dd>INVALID ZIP CODE</dd></span>
+    <% elsif (@ltl_rate) != "NO MATCH" %>
 
-        <% if (@ltl_discount) %>
-            <% if @ltl_rate * (1 - (@ltl_discount.discount.to_f)) >  @ltl_discount.min %>
-                <span class="name2"><dt>Discounted Rate</dt></span>
-                <span class="name2"><dd><%= number_to_currency(@ltl_rate.charge.to_f * (1 - (@ltl_discount.to_f)))%></dd></span>
-                <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.discount * 100, precision: 2) %></dd></span>
-                <span class="name3"><dd>FULL COST: TBD</dd></span>
-            <% else %>
-                <span class="name2"><dt>Minimum Rate</dt></span>
-                <span class="name2"><dd><%= number_to_currency(@ltl_discount.min.to_f)%></dd></span>
-                <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.discount * 100, precision: 2) %></dd></span>
-                <span class="name3"><dd>FULL COST: TBD</dd></span>
-            <% end %>    
-        <% else %>
-            <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
-            <span class="name2"><dd>FULL COST: TBD</dd></span>
-        <% end %>
+        <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
+        <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
+
     <% else %>
-            <span class="name2"><dd>NO RATE!</dd></span>
             <span class="name2"><dd>LANE NOT IN TARIFF</dd></span>
     <% end %>
     

@@ -23,4 +23,9 @@ class LtlWeightGroup < ApplicationRecord
 		 self.where('rate_block_number = ?', self.where('min_weight <= ? AND max_weight >= ?', wt, wt).first.rate_block_number + 1).first.weight_group_name
 		end
 	end
+
+	def self.get_weight_group_bump_floor(group)
+		 self.where('weight_group_name = ? ', group).first.min_weight
+	end
+
 end

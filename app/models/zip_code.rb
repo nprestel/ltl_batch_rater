@@ -12,4 +12,16 @@
 
 class ZipCode < ApplicationRecord
 
+	def self.get_zip(zip)
+	
+		@search = self.find_by('zip = ? ', zip.to_s)
+		
+		if @search.blank?
+  			@search = 'NO MATCH'
+  		else
+  			@search
+		end
+		 
+	end
+
 end

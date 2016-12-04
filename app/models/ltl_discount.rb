@@ -17,6 +17,18 @@ require 'csv'
 
 class LtlDiscount < ApplicationRecord
 
+	def self.get_discount(origin_state, dest_state)
+		
+		@search = self.where('origin_state = ? AND dest_state = ?', origin_state, dest_state)
+		
+		if @search.blank?
+  			@search = 'NO MATCH'
+  		else
+  			@search
+		end
+		 
+	end
+
 	def self.to_csv(options = {})
 		desired_columns = ["carrier_scac", "origin_state", "dest_state", "discount", "min"]
 	  CSV.generate(options) do |csv|
