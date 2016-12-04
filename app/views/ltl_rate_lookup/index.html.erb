@@ -138,20 +138,30 @@
     <% if @ltl_rate %> <!-- IF ltl_rate exists -->
         <div class="intro-text">
         <dl id ="ltl_info">
-    <% if (@zip_code2.blank? || @zip_code1.blank?) %>   <!-- AND IF zip_code1 OR zip_code2 is blank -->
-        <span class="name2"><dd>INVALID ZIP CODE</dd></span>
-    <% elsif (@ltl_rate) != "NO MATCH" %>
+        <% if (@zip_code2.blank? || @zip_code1.blank?) %>   <!-- AND IF zip_code1 OR zip_code2 is blank -->
+            <span class="name2"><dd>INVALID ZIP CODE</dd></span>
+        <% elsif (@ltl_rate) != "NO MATCH" %>
+            <% if (@ltl_discount != "NO MATCH" ) %>
+                <% if @ltl_rate * (1 - (@ltl_discount.first.discount.to_f)) >  @ltl_discount.first.min %>
+                    <span class="name2"><dt>Discounted Rate</dt></span>
+                    <span class="name2"><dd><%= number_to_currency(@ltl_rate * (1 - (@ltl_discount.first.discount.to_f)))%></dd></span>
+                    <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.first.discount.to_f * 100, precision: 2) %></dd></span>
+                    <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
+                <% else %>
+                    <span class="name2"><dt>Minimum Rate</dt></span>
+                    <span class="name2"><dd><%= number_to_currency(@ltl_discount.first.min.to_f)%></dd></span>
+                <% end %>
+            <% else %>
+                <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
+                <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
+            <% end %>  
+        <% else %>
+                <span class="name2"><dd>LANE NOT IN TARIFF</dd></span>
+        <% end %>
 
-        <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
-        <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
-
-    <% else %>
-            <span class="name2"><dd>LANE NOT IN TARIFF</dd></span>
+        </dl>
+        </div>
     <% end %>
-    
-  </dl>
-  </div>
-<% end %>
 
         </div>
     </header>
