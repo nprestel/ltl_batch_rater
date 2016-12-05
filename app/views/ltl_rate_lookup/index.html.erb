@@ -140,6 +140,8 @@
         <dl id ="ltl_info">
         <% if (@zip_code2.blank? || @zip_code1.blank?) %>   <!-- AND IF zip_code1 OR zip_code2 is blank -->
             <span class="name2"><dd>INVALID ZIP CODE</dd></span>
+        <% elsif (@zip_code2 != "NO MATCH" || @zip_code1 != "NO MATCH") %>
+            <span class="name2"><dd>INVALID ZIP CODE</dd></span>
         <% elsif (@ltl_rate) != "NO MATCH" %>
             <% if (@ltl_discount != "NO MATCH" ) %>
                 <% if @ltl_rate * (1 - (@ltl_discount.first.discount.to_f)) >  @ltl_discount.first.min %>
