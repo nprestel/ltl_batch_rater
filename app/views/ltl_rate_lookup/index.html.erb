@@ -108,6 +108,9 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:weight, "Weight") %>
   <%= number_field_tag :weight, params[:weight], class: "form-control", placeholder: "Weight in lbs", required: true, min: 1, max: 15000%>
+    <% if @ltl_rate %> 
+     <span class="name3">LBS</span>
+     <% end %>
                             </div>
                         </div>
 
@@ -147,15 +150,17 @@
                 <% if @ltl_rate * (1 - (@ltl_discount.first.discount.to_f)) >  @ltl_discount.first.min %>
                     <span class="name2"><dt>Discounted Rate</dt></span>
                     <span class="name2"><dd><%= number_to_currency(@ltl_rate * (1 - (@ltl_discount.first.discount.to_f)))%></dd></span>
+                    <span class="name3"><dd>* no fuel applied *</dd></span>
                     <span class="name3"><dd><%= @zip_code1.state %> to <%= @zip_code2.state %> discount: <%= number_to_percentage(@ltl_discount.first.discount.to_f * 100, precision: 2) %></dd></span>
-                    <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
+                    <span class="name3"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
                 <% else %>
                     <span class="name2"><dt>Minimum Rate</dt></span>
                     <span class="name2"><dd><%= number_to_currency(@ltl_discount.first.min.to_f)%></dd></span>
                 <% end %>
             <% else %>
-                <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
                 <span class="name2"><dd>FULL COST: <%= number_to_currency(@ltl_rate) %></dd></span>
+                <span class="name3"><dd>NO DISCOUNT EXISTS FOR THIS LANE</dd></span>
+                <span class="name3"><dd>* no fuel applied *</dd></span>
             <% end %>  
         <% else %>
                 <span class="name2"><dd>LANE NOT IN TARIFF</dd></span>
