@@ -10,10 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161204210459) do
+ActiveRecord::Schema.define(version: 20161211161127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "batch_rates", force: :cascade do |t|
+    t.string   "shipmentID"
+    t.string   "carrier_scac",                         default: "CTII"
+    t.float    "nmfc_class",                           default: 70.0
+    t.string   "orig_5zip"
+    t.string   "orig_state"
+    t.string   "orig_country",                         default: "USA"
+    t.string   "dest_5zip"
+    t.string   "dest_state"
+    t.string   "dest_country",                         default: "USA"
+    t.integer  "weight"
+    t.decimal  "disc_charge",  precision: 9, scale: 2
+    t.decimal  "discount",     precision: 4, scale: 3
+    t.decimal  "charge",       precision: 9, scale: 2
+    t.decimal  "min",          precision: 5, scale: 2
+    t.string   "error_code",                           default: "NONE"
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+  end
 
   create_table "ltl_discounts", force: :cascade do |t|
     t.string   "carrier_scac"

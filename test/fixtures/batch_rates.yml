@@ -1,0 +1,59 @@
+# == Schema Information
+#
+# Table name: batch_rates
+#
+#  id           :integer          not null, primary key
+#  shipmentID   :string
+#  carrier_scac :string           default("CTII")
+#  nmfc_class   :float            default(70.0)
+#  orig_5zip    :string
+#  orig_state   :string
+#  orig_country :string           default("USA")
+#  dest_5zip    :string
+#  dest_state   :string
+#  dest_country :string           default("USA")
+#  weight       :integer
+#  disc_charge  :decimal(9, 2)
+#  discount     :decimal(4, 3)
+#  charge       :decimal(9, 2)
+#  min          :decimal(5, 2)
+#  error_code   :string           default("NONE")
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  shipmentID: MyString
+  carrier_scac: MyString
+  nmfc_class: 1.5
+  orig_5zip: MyString
+  orig_state: MyString
+  orig_country: MyString
+  dest_5zip: MyString
+  dest_state: MyString
+  dest_country: MyString
+  weight: 1
+  disc_charge: 9.99
+  discount: 9.99
+  charge: 9.99
+  min: 9.99
+  error_code: MyString
+
+two:
+  shipmentID: MyString
+  carrier_scac: MyString
+  nmfc_class: 1.5
+  orig_5zip: MyString
+  orig_state: MyString
+  orig_country: MyString
+  dest_5zip: MyString
+  dest_state: MyString
+  dest_country: MyString
+  weight: 1
+  disc_charge: 9.99
+  discount: 9.99
+  charge: 9.99
+  min: 9.99
+  error_code: MyString

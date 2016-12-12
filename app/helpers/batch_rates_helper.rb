@@ -1,0 +1,2 @@
+module BatchRatesHelper
+end
