@@ -33,27 +33,37 @@ class BatchRate < ApplicationRecord
 		batch_rates.shift
 
 		CSV.foreach(file.path, headers: true) do |row|
-			if !(/\A[-+]?\d+\z/ === row['weight']) #check if weight is number
+			orig_zip_call = ZipCode.get_zip(row['orig_5zip']) # set variable to orig_zip method result to limit calls
+			dest_zip_call = ZipCode.get_zip(row['dest_5zip']) # set variable to dest_zip method result to limit calls
+
+			if !(/\A[-+]?\d+\z/ === row['weight']) #check if weight is number, if 'no' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING OR INVALID WEIGHT")
-			elsif (row['weight'].to_i.between?(1,15000) == false) #check if weight is between 1 & 15k
+			elsif (row['weight'].to_i.between?(1,15000) == false) #check if weight is between 1 & 15k, if 'no' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "WEIGHT MUST BE 1-15,000 LBS")
-			elsif (row['orig_5zip'].blank? || row['dest_5zip'].blank?) #check if either zips are blank
+			elsif (row['orig_5zip'].blank? || row['dest_5zip'].blank?) #check if either zips are blank, if 'yes' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING ZIP CODE")
-			elsif !(/\A\d{5}\z/ === row['orig_5zip']) || !(/\A\d{5}\z/ === row['dest_5zip']) #check if either zips are non-5 digit numeric strings
+			elsif !(/\A\d{5}\z/ === row['orig_5zip']) || !(/\A\d{5}\z/ === row['dest_5zip']) #check if either zips are non-5 digit numeric strings, if 'yes' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "ZIP MUST BE 5 DIGITS")
-			elsif (ZipCode.get_zip(row['orig_5zip']) == "NO MATCH" || ZipCode.get_zip(row['dest_5zip']) == "NO MATCH") #check if either zips are invalid
+			elsif (orig_zip_call == "NO MATCH" || dest_zip_call == "NO MATCH") #check if either zips are invalid, if 'yes' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "INVALID ZIP CODE")
-			else #if all validations pass, set BatchRate attributes, NOTE: SCAC & FAK values given because model isn't instantiated and values don't exist
-					if Rate.get_rate('CTII', row['orig_5zip'], row['dest_5zip'], '70', row['weight']) == "NO MATCH"
+			else 
+					rate_call = Rate.get_rate('CTII', row['orig_5zip'], row['dest_5zip'], '70', row['weight']) # set variable to get_rate method result to limit calls
+					ltl_discount_call = LtlDiscount.get_discount(orig_zip_call.state, dest_zip_call.state)
+
+					if rate_call == "NO MATCH" #check if rate doesn't exist, if 'yes' return error message
 						BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "LANE NOT IN TARIFF")
-					elsif LtlDiscount.get_discount(ZipCode.get_zip(row['orig_5zip']).state, ZipCode.get_zip(row['dest_5zip']).state) == "NO MATCH"
-						BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => ZipCode.get_zip(row['orig_5zip']).state, :dest_5zip => row['dest_5zip'], :dest_state => ZipCode.get_zip(row['dest_5zip']).state, :weight => row['weight'].to_i, :charge => Rate.get_rate('CTII', row['orig_5zip'], row['dest_5zip'], '70', row['weight']), :error_code => "NO DISCOUNT EXISTS FOR LANE")
-					else BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => ZipCode.get_zip(row['orig_5zip']).state, :dest_5zip => row['dest_5zip'], :dest_state => ZipCode.get_zip(row['dest_5zip']).state, :weight => row['weight'].to_i, :discount => LtlDiscount.get_discount(ZipCode.get_zip(row['orig_5zip']).state, ZipCode.get_zip(row['dest_5zip']).state).first.discount.to_f, :charge => Rate.get_rate('CTII', row['orig_5zip'], row['dest_5zip'], '70', row['weight']), :min => LtlDiscount.get_discount(ZipCode.get_zip(row['orig_5zip']).state, ZipCode.get_zip(row['dest_5zip']).state).first.min.to_f)
+					elsif ltl_discount_call == "NO MATCH" #check if discount doesn't exist, if 'yes' return non-discount rate with message
+						BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :charge => rate_call, :error_code => "NO DISCOUNT EXISTS FOR LANE")
+					else BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :discount => ltl_discount_call.first.discount.to_f, :charge => rate_call, :min => ltl_discount_call.first.min.to_f)
 					end
+
 			end
 		end
 
 		BatchRate.where(:error_code => "NONE").update_all("disc_charge = (CAST(charge as float) * (1 - CAST(discount as float)))")
+		BatchRate.where("error_code = 'NO DISCOUNT EXISTS FOR LANE' AND charge < min").update_all("charge = min")
+		BatchRate.where("error_code = 'NONE' AND disc_charge < min").update_all("disc_charge = min")
+
 
 	end
 
