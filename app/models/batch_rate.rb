@@ -29,10 +29,10 @@ class BatchRate < ApplicationRecord
 		# READ IMPORTED CSV FILE, SKIP HEADER ROW, CREATE ARRAY AND IMPORT INTO BATCH_RATE TABLE
 		# FILE VALIDATION (IS CSV & EXISTS) ALONG WITH TABLE DROP OCCURS IN THE BATCHRATE CONTROLLER
 
-		batch_rates = CSV.read(file.path)
+		batch_rates = CSV.read(file)
 		batch_rates.shift
 
-		CSV.foreach(file.path, headers: true) do |row|
+		CSV.foreach(file, headers: true) do |row|
 			orig_zip_call = ZipCode.get_zip(row['orig_5zip']) # set variable to orig_zip method result to limit calls
 			dest_zip_call = ZipCode.get_zip(row['dest_5zip']) # set variable to dest_zip method result to limit calls
 
@@ -56,7 +56,6 @@ class BatchRate < ApplicationRecord
 						BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :charge => rate_call, :error_code => "NO DISCOUNT EXISTS FOR LANE")
 					else BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :discount => ltl_discount_call.first.discount.to_f, :charge => rate_call, :min => ltl_discount_call.first.min.to_f)
 					end
-
 			end
 		end
 

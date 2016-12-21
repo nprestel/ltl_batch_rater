@@ -14,15 +14,17 @@ class BatchRatesController < ApplicationController
 		if params[:file].present?
 			if accepted_formats.include? File.extname(params[:file].path)
 				
-				if CSV.read(params[:file].path).size <= 5001
+				if CSV.read(params[:file].path).size <= 10001
 					BatchRate.delete_all
 
-				  BatchRate.import_rates(params[:file])			  
-				  flash[:success] = "Data Successfully Imported, Results Available!"
+					HardWorker.perform_async(params[:file].path)
+
+					#BatchRate.import_rates(params[:file])  
+				  	flash[:success] = "Data Successfully Imported, Results Available!"
 				  
 				  redirect_to batch_rates_path
 				else
-					flash[:error] = "FILE TOO LARGE! MUST BE < 5,000 ROWS."
+					flash[:error] = "FILE TOO LARGE! MUST BE < 10,000 ROWS."
 					redirect_to batch_rates_path
 				end
 

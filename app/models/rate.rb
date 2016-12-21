@@ -29,6 +29,8 @@ class Rate < ApplicationRecord
 		
 		if @search.blank?
   			@search = 'NO MATCH'
+  		elsif (weight_group_bump_name == 'M20M')
+  			@search = (@search.first.cwt/100) * (weight.to_f/100)
   		elsif ((@search.first.cwt/100) * (weight.to_f/100)) > ((@search2.first.cwt/100) * (weight_bump.to_f/100))
   			@search = (@search2.first.cwt/100) * (weight_bump.to_f/100)
   		else
