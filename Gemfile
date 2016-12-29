@@ -43,6 +43,10 @@ gem "activerecord-import", ">= 0.4.0"
 
 gem 'sidekiq'
 
+gem 'aws-sdk', '~> 2'
+
+gem 'dotenv-rails', :groups => [:development, :test]
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
