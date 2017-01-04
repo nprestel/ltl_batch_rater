@@ -4,3 +4,6 @@ Aws.config.update({
 })
 
 S3_BUCKET = Aws::S3::Resource.new.bucket(ENV['S3_BUCKET'])
+
+require 'open-uri'
+OpenURI::Buffer::StringMax = 0
