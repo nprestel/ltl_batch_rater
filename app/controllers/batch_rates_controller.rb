@@ -1,4 +1,5 @@
 class BatchRatesController < ApplicationController
+	before_action :set_s3_direct_post, only: [:new, :edit, :create, :update]
 	
 	def index
 	    @batch_rates = BatchRate.order(:disc_charge)
@@ -11,15 +12,37 @@ class BatchRatesController < ApplicationController
 
 	def import
 		accepted_formats = [".csv"]
+		
 		if params[:file].present?
 			if accepted_formats.include? File.extname(params[:file].path)
 				
 				if CSV.read(params[:file].path).size <= 5001
 					BatchRate.delete_all
 
-					#HardWorker.perform_async(params[:file].path)
+					uploader = BatchrateUploader.new
+					handle = open(params[:file].path)
+					handle.binmode
+					if handle.is_a?(StringIO)
+					  tempfile = Tempfile.new("my-uploader-open-uri")
+					  tempfile.write(handle.read)
+					  tempfile.close
+					  handle = tempfile
+					end
+					uploader.store!(handle)
+					
+					# ORIGINAL CODE
+					#---------------
+					#uploader = BatchrateUploader.new
+ 					#File.open(params[:file].path) do |file|
+					#  something = uploader.store!(file)
+					#end
+					#---------------
 
-					BatchRateMonitorJob.perform_later params[:file].path
+
+					#HardWorker.perform_async(params[:file].path)
+					#BatchRateMonitorJob.perform_later params[:file].path
+
+					BatchRateMonitorJob.perform_later uploader.url
 
 					#BatchRate.import_rates(params[:file])  
 				  	flash[:success] = "Data Successfully Imported and Being Processed."
@@ -41,4 +64,10 @@ class BatchRatesController < ApplicationController
 		end
 
 	end
+
+private
+  def set_s3_direct_post
+    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
+  end
+
 end
