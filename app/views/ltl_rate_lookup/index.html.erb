@@ -77,6 +77,15 @@
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
 <%= form_tag root_url, method: :get, :class => "form-group", id: "ltl-form" do %>
+
+   <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+  <%= label_tag(:carrier_scac, "Carrier") %>
+  <%= select_tag(:carrier_scac, options_for_select([['Central Transport', 'CTII'], ['ProTrans', 'PNII']], 'CTII'), class: "form-control",)%>
+                            </div>
+
+                        </div>
+
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:origin_zip, "Origin Zip") %>

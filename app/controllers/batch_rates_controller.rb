@@ -1,5 +1,6 @@
 class BatchRatesController < ApplicationController
 	before_action :set_s3_direct_post, only: [:new, :edit, :create, :update]
+
 	
 	def index
 	    @batch_rates = BatchRate.order(:disc_charge)

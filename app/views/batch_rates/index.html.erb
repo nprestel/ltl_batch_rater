@@ -80,8 +80,8 @@
 <% end %>
 
 
-<br><br>
-<%= link_to "Get Results", batch_rates_path(format: "csv"), class: "btn btn-success btn-lg" %><br><br>
+<br>
+<%= link_to "Get Results", batch_rates_path(format: "csv"), class: "btn btn-success btn-lg" if BatchRate.exists? %><br><br>
 <br><br><br>
 <h4>Resources</h4>
 <%= link_to "Download Import Template", '/template.csv', class: "btn btn-primary btn-sm" %>

@@ -24,6 +24,8 @@
 
 class BatchRate < ApplicationRecord
 
+	attr_accessor :flash_notice
+
 	def self.import_rates(file)
 
 		# READ IMPORTED CSV FILE, SKIP HEADER ROW, CREATE ARRAY AND IMPORT INTO BATCH_RATE TABLE
@@ -32,9 +34,13 @@ class BatchRate < ApplicationRecord
 		batch_rates = CSV.read(file)
 		batch_rates.shift
 
+		@completion_flag = FALSE
+
+
 		CSV.foreach(file, headers: true) do |row|
 			orig_zip_call = ZipCode.get_zip(row['orig_5zip']) # set variable to orig_zip method result to limit calls
 			dest_zip_call = ZipCode.get_zip(row['dest_5zip']) # set variable to dest_zip method result to limit calls
+
 
 			if !(/\A[-+]?\d+\z/ === row['weight']) #check if weight is number, if 'no' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING OR INVALID WEIGHT")
@@ -63,8 +69,8 @@ class BatchRate < ApplicationRecord
 		BatchRate.where("error_code = 'NO DISCOUNT EXISTS FOR LANE' AND charge < min").update_all("charge = min")
 		BatchRate.where("error_code = 'NONE' AND disc_charge < min").update_all("disc_charge = min")
 
-
 	end
+
 
 	def self.to_csv(options = {})  # EXPORTS RECORDS TO CSV
 	    desired_columns = ["shipmentID", "carrier_scac", "nmfc_class", "orig_5zip", "orig_state", "orig_country", "dest_5zip", "dest_state", "dest_country", "weight", "disc_charge", "discount", "charge", "min", "error_code"]

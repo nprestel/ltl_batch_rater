@@ -8,5 +8,3 @@ class BatchRateMonitorJob < ApplicationJob
     BatchRate.import_rates(csv_file)
   end
 end
-
-
