@@ -17,9 +17,9 @@ require 'csv'
 
 class LtlDiscount < ApplicationRecord
 
-	def self.get_discount(origin_state, dest_state)
+	def self.get_discount(carrier_scac, origin_state, dest_state)
 		
-		@search = self.where('origin_state = ? AND dest_state = ?', origin_state, dest_state)
+		@search = self.where('carrier_scac = ? AND origin_state = ? AND dest_state = ?', carrier_scac.upcase, origin_state, dest_state)
 		
 		if @search.blank?
   			@search = 'NO MATCH'
