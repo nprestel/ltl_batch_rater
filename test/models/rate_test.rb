@@ -11,6 +11,8 @@
 #  cwt               :float
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  ctii_cwt          :float
+#  pnii_cwt          :float
 #
 
 require 'test_helper'

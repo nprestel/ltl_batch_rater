@@ -11,6 +11,8 @@
 #  cwt               :float
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  ctii_cwt          :float
+#  pnii_cwt          :float
 #
 
 class Rate < ApplicationRecord
@@ -21,20 +23,22 @@ class Rate < ApplicationRecord
 
 		origin_3zip = origin_zip[0,3]
 		dest_3zip = dest_zip[0,3]
-		
-		@search = self.where('carrier_scac = ? AND nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', carrier_scac, fak, origin_3zip, dest_3zip, weight_group_name)
 
-		@search2 = self.where('carrier_scac = ? AND nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', carrier_scac, fak, origin_3zip, dest_3zip, weight_group_bump_name)
+		scac = carrier_scac.to_s + "_cwt"
+		
+		@search = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_name)
+
+		@search2 = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_bump_name)
 
 		
 		if @search.blank?
   			@search = 'NO MATCH'
   		elsif (weight_group_bump_name == 'M20M')
-  			@search = (@search.first.cwt/100) * (weight.to_f/100)
-  		elsif ((@search.first.cwt/100) * (weight.to_f/100)) > ((@search2.first.cwt/100) * (weight_bump.to_f/100))
-  			@search = (@search2.first.cwt/100) * (weight_bump.to_f/100)
+  			@search = (@search.first.read_attribute(scac)/100) * (weight.to_f/100)
+  		elsif ((@search.first.read_attribute(scac)/100) * (weight.to_f/100)) > ((@search2.first.read_attribute(scac)/100) * (weight_bump.to_f/100))
+  			@search = (@search2.first.read_attribute(scac)/100) * (weight_bump.to_f/100)
   		else
-  			@search = (@search.first.cwt/100) * (weight.to_f/100)
+  			@search = (@search.first.read_attribute(scac)/100) * (weight.to_f/100)
 		end
 		 
 	end

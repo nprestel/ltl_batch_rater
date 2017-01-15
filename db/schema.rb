@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161211161127) do
+ActiveRecord::Schema.define(version: 20170112172831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 20161211161127) do
     t.float    "cwt"
     t.datetime "created_at",        default: -> { "now()" }, null: false
     t.datetime "updated_at",        default: -> { "now()" }, null: false
+    t.float    "ctii_cwt"
+    t.float    "pnii_cwt"
     t.index ["orig_3zip", "dest_3zip", "weight_group_name"], name: "rates_od_wtgroup_idx", using: :btree
   end
 
