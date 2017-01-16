@@ -11,16 +11,20 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  group        :string
+#  dest_zip     :string
 #
 
 require 'csv'
 
 class LtlDiscount < ApplicationRecord
 
-	def self.get_discount(carrier_scac, origin_state, dest_state)
-		
-		@search = self.where('carrier_scac = ? AND origin_state = ? AND dest_state = ?', carrier_scac.upcase, origin_state, dest_state)
-		
+	def self.get_discount(carrier_scac, origin_state, dest_state, dest_zip)
+		if carrier_scac = "pnii"
+			@search = self.where('carrier_scac = ? AND origin_state = ? AND dest_zip = ?', carrier_scac.upcase, origin_state, dest_zip)
+		else
+			@search = self.where('carrier_scac = ? AND origin_state = ? AND dest_state = ?', carrier_scac.upcase, origin_state, dest_state)
+		end
+
 		if @search.blank?
   			@search = 'NO MATCH'
   		else
@@ -30,7 +34,7 @@ class LtlDiscount < ApplicationRecord
 	end
 
 	def self.to_csv(options = {})
-		desired_columns = ["carrier_scac", "origin_state", "dest_state", "discount", "min"]
+		desired_columns = ["carrier_scac", "origin_state", "dest_state", "dest_zip", "discount", "min"]
 	  CSV.generate(options) do |csv|
 	    csv << desired_columns
 	    all.each do |ltl_discount|

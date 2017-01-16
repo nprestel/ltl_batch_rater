@@ -11,6 +11,7 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  group        :string
+#  dest_zip     :string
 #
 
 require 'test_helper'

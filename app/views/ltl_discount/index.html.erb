@@ -84,6 +84,7 @@
       <th style="text-align:center">SCAC</th>
       <th style="text-align:center">Origin State</th>
       <th style="text-align:center">Destination State</th>
+      <th style="text-align:center">Destination Zip</th>
       <th style="text-align:center">Discount</th>
       <th style="text-align:center">Min Cost</th>
     </tr>
@@ -94,6 +95,7 @@
         <td style="color:#4d4d4d"><%= ltl_discount.carrier_scac %></td>
         <td style="color:#4d4d4d"><%= ltl_discount.origin_state %></td>
         <td style="color:#4d4d4d"><%= ltl_discount.dest_state %></td>
+        <td style="color:#4d4d4d"><%= ltl_discount.dest_zip %></td>
         <td style="color:#4d4d4d"><%= number_to_percentage(ltl_discount.discount * 100, precision: 2) %></td>
         <td style="color:#4d4d4d"><%= number_to_currency(ltl_discount.min) %></td>
       </tr>
