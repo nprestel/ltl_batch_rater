@@ -81,11 +81,10 @@
    <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:carrier_scac, "Carrier") %>
-  <%= select_tag(:carrier_scac, options_for_select([['Central Transport', 'ctii'], ['ProTrans', 'pnii']], :selected => params[:carrier_scac]), class: "form-control select-group",)%>
+  <%= select_tag(:carrier_scac, options_for_select([['Central Transport', 'ctii'], ['ProTrans', 'pnii']], :selected => params[:carrier_scac]), class: "form-control select-group", id: "carrier-select")%>
                             </div>
 
                         </div>
-
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:origin_zip, "Origin Zip") %>
@@ -112,6 +111,7 @@
     <% end %>
                             </div>
                         </div>
+        <label class="hidden_option">ProTrans discounts apply only where destination zip is 78045 (Laredo), 78572 (Los Indios), or 79927 (El Paso)</label>
               
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
@@ -210,6 +210,19 @@
  <script src="./js/bootstrap.min.js"></script>
  <script src="./js/jqBootstrapValidation.js"></script>
  <script src="./js/contact_me.js"></script>
+
+ <script>
+    $(document).ready(function(){
+        $("#carrier-select").change(function(){
+            if($("#carrier-select").val() == "ctii"){
+              $(".hidden_option").hide();   
+            } 
+            else {
+                $(".hidden_option").show();
+            }
+        });        
+    });
+</script>
 
 
 </body>
