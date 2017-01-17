@@ -53,14 +53,14 @@ class BatchRate < ApplicationRecord
 			elsif (orig_zip_call == "NO MATCH" || dest_zip_call == "NO MATCH") #check if either zips are invalid, if 'yes' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "INVALID ZIP CODE")
 			else 
-					rate_call = Rate.get_rate('CTII', row['orig_5zip'], row['dest_5zip'], '70', row['weight']) # set variable to get_rate method result to limit calls
-					ltl_discount_call = LtlDiscount.get_discount(orig_zip_call.state, dest_zip_call.state)
+					rate_call = Rate.get_rate(row['carrier_scac'].downcase, row['orig_5zip'], row['dest_5zip'], '70', row['weight']) # set variable to get_rate method result to limit calls
+					ltl_discount_call = LtlDiscount.get_discount(row['carrier_scac'].downcase, orig_zip_call.state, dest_zip_call.state, row['dest_5zip'])
 
 					if rate_call == "NO MATCH" #check if rate doesn't exist, if 'yes' return error message
 						BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "LANE NOT IN TARIFF")
 					elsif ltl_discount_call == "NO MATCH" #check if discount doesn't exist, if 'yes' return non-discount rate with message
-						BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :charge => rate_call, :error_code => "NO DISCOUNT EXISTS FOR LANE")
-					else BatchRate.create(:shipmentID => row['shipmentID'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :discount => ltl_discount_call.first.discount.to_f, :charge => rate_call, :min => ltl_discount_call.first.min.to_f)
+						BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :charge => rate_call, :error_code => "NO DISCOUNT EXISTS FOR LANE")
+					else BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :discount => ltl_discount_call.first.discount.to_f, :charge => rate_call, :min => ltl_discount_call.first.min.to_f)
 					end
 			end
 		end

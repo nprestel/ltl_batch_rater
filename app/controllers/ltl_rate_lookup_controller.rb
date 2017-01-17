@@ -1,7 +1,6 @@
 class LtlRateLookupController < ApplicationController
 		def index
 		params[:fak] = "70"
-		#params[:carrier_scac] = "CTII"
 		@ltl_rate = Rate.get_rate(params[:carrier_scac], params[:origin_zip], params[:dest_zip], params[:fak], params[:weight]) if params[:origin_zip].present? && params[:dest_zip].present? && params[:fak].present? && params[:weight].present?
 
     	@zip_code1 = ZipCode.get_zip(params[:origin_zip]) if params[:origin_zip].present?

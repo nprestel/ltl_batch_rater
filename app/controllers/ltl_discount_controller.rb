@@ -1,7 +1,7 @@
 class LtlDiscountController < ApplicationController
 
 	def index
-	    @ltl_discounts = LtlDiscount.order(:origin_state, :dest_state, :dest_zip)
+	    @ltl_discounts = LtlDiscount.order(:carrier_scac, :origin_state, :dest_state, :dest_zip)
 
 	    respond_to do |format|
 	      format.html
