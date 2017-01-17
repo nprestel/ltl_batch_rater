@@ -4,7 +4,7 @@
 #
 #  id           :integer          not null, primary key
 #  shipmentID   :string
-#  carrier_scac :string           default("CTII")
+#  carrier_scac :string
 #  nmfc_class   :float            default(70.0)
 #  orig_5zip    :string
 #  orig_state   :string

@@ -4,7 +4,7 @@
 #
 #  id           :integer          not null, primary key
 #  shipmentID   :string
-#  carrier_scac :string           default("CTII")
+#  carrier_scac :string
 #  nmfc_class   :float            default(70.0)
 #  orig_5zip    :string
 #  orig_state   :string
@@ -43,25 +43,25 @@ class BatchRate < ApplicationRecord
 
 
 			if !(/\A[-+]?\d+\z/ === row['weight']) #check if weight is number, if 'no' return error message
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING OR INVALID WEIGHT")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :weight => row['weight'], :error_code => "MISSING OR INVALID WEIGHT")
 			elsif (row['weight'].to_i.between?(1,15000) == false) #check if weight is between 1 & 15k, if 'no' return error message
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "WEIGHT MUST BE 1-15,000 LBS")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :weight => row['weight'], :error_code => "WEIGHT MUST BE 1-15,000 LBS")
 			elsif (row['carrier_scac'].blank?)
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING CARRIER SCAC")	
 			elsif (row['carrier_scac'].upcase != "PNII" && row['carrier_scac'].upcase != "CTII")
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "INVALID CARRIER SCAC")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :error_code => "INVALID CARRIER SCAC")
 			elsif (row['orig_5zip'].blank? || row['dest_5zip'].blank?) #check if either zips are blank, if 'yes' return error message
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING ZIP CODE")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :dest_5zip => row['dest_5zip'], :error_code => "MISSING ZIP CODE")
 			elsif !(/\A\d{5}\z/ === row['orig_5zip']) || !(/\A\d{5}\z/ === row['dest_5zip']) #check if either zips are non-5 digit numeric strings, if 'yes' return error message
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "ZIP MUST BE 5 DIGITS")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :dest_5zip => row['dest_5zip'], :error_code => "ZIP MUST BE 5 DIGITS")
 			elsif (orig_zip_call == "NO MATCH" || dest_zip_call == "NO MATCH") #check if either zips are invalid, if 'yes' return error message
-				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "INVALID ZIP CODE")
+				BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :dest_5zip => row['dest_5zip'], :error_code => "INVALID ZIP CODE")
 			else 
 					rate_call = Rate.get_rate(row['carrier_scac'].downcase, row['orig_5zip'], row['dest_5zip'], '70', row['weight']) # set variable to get_rate method result to limit calls
 					ltl_discount_call = LtlDiscount.get_discount(row['carrier_scac'].downcase, orig_zip_call.state, dest_zip_call.state, row['dest_5zip'])
 
 					if rate_call == "NO MATCH" #check if rate doesn't exist, if 'yes' return error message
-						BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "LANE NOT IN TARIFF")
+						BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :error_code => "LANE NOT IN TARIFF")
 					elsif ltl_discount_call == "NO MATCH" #check if discount doesn't exist, if 'yes' return non-discount rate with message
 						BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :charge => rate_call, :error_code => "NO DISCOUNT EXISTS FOR LANE")
 					else BatchRate.create(:shipmentID => row['shipmentID'], :carrier_scac => row['carrier_scac'], :orig_5zip => row['orig_5zip'], :orig_state => orig_zip_call.state, :dest_5zip => row['dest_5zip'], :dest_state => dest_zip_call.state, :weight => row['weight'].to_i, :discount => ltl_discount_call.first.discount.to_f, :charge => rate_call, :min => ltl_discount_call.first.min.to_f)
