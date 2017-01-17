@@ -46,6 +46,10 @@ class BatchRate < ApplicationRecord
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING OR INVALID WEIGHT")
 			elsif (row['weight'].to_i.between?(1,15000) == false) #check if weight is between 1 & 15k, if 'no' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "WEIGHT MUST BE 1-15,000 LBS")
+			elsif (row['carrier_scac'].blank?)
+				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING CARRIER SCAC")	
+			elsif (row['carrier_scac'].upcase != "PNII" && row['carrier_scac'].upcase != "CTII")
+				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "INVALID CARRIER SCAC")
 			elsif (row['orig_5zip'].blank? || row['dest_5zip'].blank?) #check if either zips are blank, if 'yes' return error message
 				BatchRate.create(:shipmentID => row['shipmentID'], :error_code => "MISSING ZIP CODE")
 			elsif !(/\A\d{5}\z/ === row['orig_5zip']) || !(/\A\d{5}\z/ === row['dest_5zip']) #check if either zips are non-5 digit numeric strings, if 'yes' return error message
