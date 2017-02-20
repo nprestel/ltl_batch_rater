@@ -42,6 +42,7 @@ gem "less-rails"
 gem "activerecord-import", ">= 0.4.0"
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 gem 'aws-sdk', '~> 2'
 

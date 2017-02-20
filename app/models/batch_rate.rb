@@ -34,10 +34,8 @@ class BatchRate < ApplicationRecord
 		batch_rates = CSV.read(file)
 		batch_rates.shift
 
-		@completion_flag = FALSE
-
-
 		CSV.foreach(file, headers: true) do |row|
+
 			orig_zip_call = ZipCode.get_zip(row['orig_5zip']) # set variable to orig_zip method result to limit calls
 			dest_zip_call = ZipCode.get_zip(row['dest_5zip']) # set variable to dest_zip method result to limit calls
 
