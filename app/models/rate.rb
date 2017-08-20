@@ -17,6 +17,7 @@
 
 class Rate < ApplicationRecord
 	def self.get_rate(carrier_scac, origin_zip, dest_zip, fak, weight)
+
 		weight_group_name = LtlWeightGroup.get_weight_group(weight)
 		weight_group_bump_name = LtlWeightGroup.get_weight_group_bump(weight)
 		weight_bump = LtlWeightGroup.get_weight_group_bump_floor(weight_group_bump_name)
@@ -26,9 +27,14 @@ class Rate < ApplicationRecord
 
 		scac = carrier_scac.to_s + "_cwt"
 		
-		@search = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_name)
+		@search = self.where('orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', origin_3zip, dest_3zip, weight_group_name)
+		# @search = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_name)
+		# removed version with FAK lookup
 
-		@search2 = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_bump_name)
+		@search2 = self.where('orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', origin_3zip, dest_3zip, weight_group_bump_name)
+
+		# @search2 = self.where('nmfc_class = ? AND orig_3zip = ? AND dest_3zip = ? AND weight_group_name = ?', fak, origin_3zip, dest_3zip, weight_group_bump_name)
+		# removed version with FAK lookup
 
 		
 		if @search.blank?

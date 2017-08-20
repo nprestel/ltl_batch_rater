@@ -98,6 +98,7 @@
     <% end %>
                             </div>
                         </div>
+        <label class="hidden_option">NOTE! Shipments from 60446, 39601, 60067, & 01420 destined to EPDC, LADC, or LIDC are charged at FAK 100</label>
                                                 <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
   <%= label_tag(:dest_zip, "Destination Zip") %>
@@ -111,7 +112,7 @@
     <% end %>
                             </div>
                         </div>
-        <label class="hidden_option">ProTrans discounts apply only to 78045 (Laredo), 78572/78567 (Los Indios), or 79927/79906 (El Paso)</label>
+        <label class="hidden_option">ProTrans discounts apply only inbound to 78572/78567 (Los Indios), and inbound/outbound from 78045 (Laredo), or 79927/79906 (El Paso)</label>
               
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
@@ -132,10 +133,12 @@
   <%= label_tag(:fak, "* fixed value per contract *") %>
                             </div>
                         </div>
+
+
                         <% end %>
 
 
-                        <br>
+                                                <br>
                         <div id="success"></div>
                         <div class="row">
                             <div class="form-group col-xs-12">

@@ -70,7 +70,7 @@ class BatchRate < ApplicationRecord
 		BatchRate.where(:error_code => "NONE").update_all("disc_charge = (CAST(charge as float) * (1 - CAST(discount as float)))")
 		BatchRate.where("error_code = 'NO DISCOUNT EXISTS FOR LANE' AND charge < min").update_all("charge = min")
 		BatchRate.where("error_code = 'NONE' AND disc_charge < min").update_all("disc_charge = min")
-
+		BatchRate.where("carrier_scac = 'PNII' AND orig_5zip IN ('60446', '39601', '60067', '01420') AND dest_5zip IN ('78045', '78572', '78567', '79927', '79906')").update_all("nmfc_class = 100")
 	end
 
 
