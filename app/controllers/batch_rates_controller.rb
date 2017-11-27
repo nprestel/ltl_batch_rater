@@ -43,7 +43,7 @@ class BatchRatesController < ApplicationController
 					#HardWorker.perform_async(params[:file].path)
 					#BatchRateMonitorJob.perform_later params[:file].path
 
-					BatchRateMonitorJob.perform_later uploader.url
+					BatchRateMonitorJob.perform_later(uploader.url, params[:email_entry])
 
 					#BatchRate.import_rates(params[:file])  
 				  	flash[:success] = "Data Successfully Imported and Being Processed."

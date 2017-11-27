@@ -73,15 +73,26 @@
 
                 <h2>Import File</h2>
                 <br>
+                            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
 <%= form_tag import_batch_rates_path, multipart: true do %>
   <%= file_field_tag :file, accept: '.csv', class:"btn btn-primary btn-sm center-block" %>
+     <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+  <%= label_tag(:email_entry, "Email") %>
+  <%= email_field_tag :email_entry, nil, class: "form-control", placeholder: "Email address", required: true%>
+                  </div>
+            </div>
+    <label>Results will be sent to your email</label>
   <br>
-  <%= submit_tag "Import", class:"btn btn-primary btn-sm" %>
+  <br>
+  <%= submit_tag "Import", class:"btn btn-success btn-lg" %>
 <% end %>
-
+                  </div>
+            </div>
 
 <br>
-<%= link_to "Get Results", batch_rates_path(format: "csv"), class: "btn btn-success btn-lg" %><br><br>
+<!-- <%= link_to "Get Results", batch_rates_path(format: "csv"), class: "btn btn-success btn-lg" %><br><br>  -->
 <br><br><br>
 <h4>Resources</h4>
 <%= link_to "Download Import Template", '/template.csv', class: "btn btn-primary btn-sm" %>
