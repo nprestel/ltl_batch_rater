@@ -46,7 +46,7 @@ class BatchRatesController < ApplicationController
 					BatchRateMonitorJob.perform_later(uploader.url, params[:email_entry])
 
 					#BatchRate.import_rates(params[:file])  
-				  	flash[:success] = "Data Successfully Imported and Being Processed."
+				  	flash[:success] = "Data successfully imported and being processed. You will receive an email shortly with the results.  NOTE! large requests can take 5+ minutes to process."
 				  
 				  redirect_to batch_rates_path
 				else
