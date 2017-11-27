@@ -42,7 +42,7 @@ Rails.application.configure do
   # }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { :host => 'thawing-oasis-41119.herokuapp.com' }
+  config.action_mailer.default_url_options = { :host => 'delphi-rater.com' }
   config.action_mailer.perform_caching = false
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
