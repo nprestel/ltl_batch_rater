@@ -20,6 +20,3 @@
 # Ignore Byebug command history file.
 .byebug_history
 .env
-
-# Ignore controller file with hard-coded password.
-/app/controllers/application_controller.rb
